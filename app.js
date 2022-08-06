@@ -1,3 +1,4 @@
+const fs = require("fs");
 const inquirer = require("inquirer");
 const Employee = require("./lib/Employee");
 const Engineer = require("./lib/Engineer");
@@ -282,6 +283,32 @@ function internPrompt() {
     });
 }
 
+const content = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+`;
+function writeHtmlFIle() {
+  fs.writeFile(
+    "/Users/roxan/Desktop/projects/team-profile-generator/index.html",
+    content,
+    (err) => {
+      if (err) {
+        console.error(err);
+      }
+      // file written successfully
+      console.log("your file was successfully created!");
+    }
+  );
+}
+
 function endPrompt() {
   console.log(employeeArr);
+  writeHtmlFIle();
 }
