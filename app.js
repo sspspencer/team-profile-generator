@@ -12,7 +12,7 @@ inquirer
   .prompt([
     {
       type: "input",
-      name: "manager",
+      name: "name",
       message: "Please enter the Manager's Name!",
       validate: (managerinput) => {
         if (managerinput) {
@@ -78,7 +78,10 @@ inquirer
     },
   ])
   .then((answers) => {
-    employeeArr.push(answers);
+    answers.role = "Manager";
+    employeeArr.push(
+      new Manager(answers.name, answers.id, answers.email, answers.officeNumber)
+    );
     // Use user feedback for... whatever!!
     if (answers.moreEmployees === "Engineer") {
       engineerPrompt();
@@ -103,7 +106,7 @@ function engineerPrompt() {
     .prompt([
       {
         type: "input",
-        name: "engineer",
+        name: "name",
         message: "Please enter the Engineer's Name!",
         validate: (engineerinput) => {
           if (engineerinput) {
@@ -169,7 +172,9 @@ function engineerPrompt() {
       },
     ])
     .then((answers) => {
-      employeeArr.push(answers);
+      employeeArr.push(
+        new Engineer(answers.name, answers.id, answers.email, answers.github)
+      );
       // Use user feedback for... whatever!!
       if (answers.moreEmployees === "Engineer") {
         engineerPrompt();
@@ -195,7 +200,7 @@ function internPrompt() {
     .prompt([
       {
         type: "input",
-        name: "manager",
+        name: "name",
         message: "Please enter the Intern's Name!",
         validate: (managerinput) => {
           if (managerinput) {
@@ -261,8 +266,9 @@ function internPrompt() {
       },
     ])
     .then((answers) => {
-      console.log(answers);
-      employeeArr.push(answers);
+      employeeArr.push(
+        new Intern(answers.name, answers.id, answers.email, answers.school)
+      );
       // Use user feedback for... whatever!!
       if (answers.moreEmployees === "Engineer") {
         engineerPrompt();
@@ -283,18 +289,7 @@ function internPrompt() {
     });
 }
 
-const content = `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body></body>
-</html>
-`;
-function writeHtmlFIle() {
+function writeHtmlFIle(content) {
   fs.writeFile(
     "/Users/roxan/Desktop/projects/team-profile-generator/index.html",
     content,
@@ -309,6 +304,83 @@ function writeHtmlFIle() {
 }
 
 function endPrompt() {
-  console.log(employeeArr);
-  writeHtmlFIle();
+  const content = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles.css">
+    <title>Document</title>
+  </head>
+  <body>
+  <header id="header">My Team</header>
+  <section id="card-section">
+  ${cardAppend()}
+  </section>
+  <script src="../team-profile-generator/app.js"></script>
+  </body>
+</html>
+`;
+  employeeArr.forEach((element) => console.log(element));
+  for (let i = 0; i < employeeArr.length; i++) {
+    console.log(employeeArr[i].getRole());
+  }
+  writeHtmlFIle(content);
+}
+
+function cardAppend() {
+  console.log("hello");
+  let arr = [];
+
+  for (let i = 0; i < employeeArr.length; i++) {
+    if (employeeArr[i].getRole() === "Manager") {
+      let newCard = `<div class="card"><div class="card-header"><p class="header-item">${
+        employeeArr[i].name
+      }</p><p class="header-item">${employeeArr[
+        i
+      ].getRole()}</p></div><div class="card-body"><p class="body-item">ID: ${
+        employeeArr[i].id
+      }</p><p class="body-item">Email: <a href="mailto:${
+        employeeArr[i].email
+      }" target="_blank">${
+        employeeArr[i].email
+      }</a></p><p class="body-item">Office Number: ${
+        employeeArr[i].officeNumber
+      }</p></div></div>`;
+      arr.push(newCard);
+    } else if (employeeArr[i].getRole() === "Engineer") {
+      let newCard = `<div class="card"><div class="card-header"><p class="header-item">${
+        employeeArr[i].name
+      }</p><p class="header-item">${employeeArr[
+        i
+      ].getRole()}</p></div><div class="card-body"><p class="body-item">ID: ${
+        employeeArr[i].id
+      }</p><p class="body-item">Email: <a href="mailto:${
+        employeeArr[i].email
+      }" target="_blank">${
+        employeeArr[i].email
+      }</a></p><p class="body-item">Github: <a href="https://github.com/${
+        employeeArr[i].github
+      }" target="_blank">${employeeArr[i].github}</a></p></div></div>`;
+      arr.push(newCard);
+    } else if (employeeArr[i].getRole() === "Intern") {
+      let newCard = `<div class="card"><div class="card-header"><p class="header-item">${
+        employeeArr[i].name
+      }</p><p class="header-item">${employeeArr[
+        i
+      ].getRole()}</p></div><div class="card-body"><p class="body-item">ID: ${
+        employeeArr[i].id
+      }</p><p class="body-item">Email: <a href="mailto:${
+        employeeArr[i].email
+      }" target="_blank">${
+        employeeArr[i].email
+      }</a></p><p class="body-item">School: ${
+        employeeArr[i].school
+      }</p></div></div>`;
+      arr.push(newCard);
+    }
+  }
+  console.log(arr);
+  return arr.join(" ");
 }
