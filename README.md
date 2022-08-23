@@ -15,7 +15,7 @@
 
 ## Website
 
-https://sspspencer.github.io/team-profile=generator/
+https://sspspencer.github.io/team-profile-generator/
 
 ## Created
 
